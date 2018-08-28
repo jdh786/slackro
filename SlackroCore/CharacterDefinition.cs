@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 
 namespace SlackroCore
 {
-    public static class LetterDefinition
+    public static class CharacterDefinition
     {
 
-        private static Dictionary <char,string[]> LoadLetters()
+        private static Dictionary <char,string[]> LoadCharacters()
         {
             Dictionary<char, string[]> Letters = new Dictionary<char, string[]>();
             Letters.Add('A', new string[]{ " ** ",
@@ -234,6 +234,65 @@ namespace SlackroCore
                                             " *   ",
                                             "*    " });
 
+            Letters.Add('1', new string[] { " *",
+                                            "**",
+                                            " *",
+                                            " *",
+                                            "***" });
+
+            Letters.Add('2', new string[] { "****",
+                                            "   *",
+                                            "****",
+                                            "*   ",
+                                            "****" });
+
+            Letters.Add('3', new string[] { "****",
+                                            "   *",
+                                            "****",
+                                            "   *",
+                                            "****" });
+
+            Letters.Add('4', new string[] { "*  *",
+                                            "*  *",
+                                            "****",
+                                            "   *",
+                                            "   *" });
+
+            Letters.Add('5', new string[] { "****",
+                                            "*   ",
+                                            "****",
+                                            "   *",
+                                            "****" });
+
+            Letters.Add('6', new string[] { "****",
+                                            "*   ",
+                                            "****",
+                                            "*  *",
+                                            "****" });
+
+            Letters.Add('7', new string[] { "****",
+                                            "   *",
+                                            "   *",
+                                            "   *",
+                                            "   *" });
+
+            Letters.Add('8', new string[] { "****",
+                                            "*  *",
+                                            "****",
+                                            "*  *",
+                                            "****" });
+
+            Letters.Add('9', new string[] { "****",
+                                            "*  *",
+                                            "****",
+                                            "   *",
+                                            "****" });
+
+            Letters.Add('0', new string[] { "****",
+                                            "*  *",
+                                            "*  *",
+                                            "*  *",
+                                            "****" });
             return Letters;
         }
 
@@ -241,7 +300,7 @@ namespace SlackroCore
         {
             string macro = "";
             string blank = ConfigurationManager.AppSettings["blankmoji"];
-            Dictionary <char,string[]> letters = LoadLetters();
+            Dictionary <char,string[]> letters = LoadCharacters();
             text = text.ToUpper();
 
             for(int y=0;y<5;y++)
