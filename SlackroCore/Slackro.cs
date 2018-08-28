@@ -32,7 +32,7 @@ namespace SlackroCore
             }
             else
             {                
-                string macro = LetterDefinition.Macrofy(text, emoji);
+                string macro = CharacterDefinition.Macrofy(text, emoji);
                 SendResponse(responseUrl, new SlackResponse() { response_type = "in_channel", text = macro, attachments = new SlackResponse.Attachment[] { new SlackResponse.Attachment() { text = "Requested by " + userName } } });
             }
         }
