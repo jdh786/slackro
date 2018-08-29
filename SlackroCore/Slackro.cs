@@ -1,13 +1,11 @@
-﻿using SlackroCore.SlackModels;
+﻿using Newtonsoft.Json;
+using SlackroCore.SlackModels;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace SlackroCore
 {
@@ -15,26 +13,42 @@ namespace SlackroCore
     {
         public static async Task GetSlackro(string text, string emoji, string userName, string responseUrl)
         {
-            IProfanityRepository profanityRepository = new ProfanityRepository();
-            bool hasProfanity = false;
-            try
+            if (ConfigurationManager.AppSettings["forbiddenEmoji"].Split(',').Contains(emoji))
             {
-                hasProfanity = await profanityRepository.HasProfanity(text);
+                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["forbiddenEmojiResponse"]});
             }
-            catch (Exception)
+            else if (!IsAscii(text))
             {
-                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = "Unable to check provided input for safeness"});
-            }
-
-            if (hasProfanity)
-            {
-                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["profanityText"] });
+                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["nonAsciiResponse"] });
             }
             else
-            {                
-                string macro = CharacterDefinition.Macrofy(text, emoji);
-                SendResponse(responseUrl, new SlackResponse() { response_type = "in_channel", text = macro, attachments = new SlackResponse.Attachment[] { new SlackResponse.Attachment() { text = "Requested by " + userName } } });
+            {
+                IProfanityRepository profanityRepository = new ProfanityRepository();
+                bool hasProfanity = false;
+                try
+                {
+                    hasProfanity = await profanityRepository.HasProfanity(text);
+                }
+                catch (Exception)
+                {
+                    SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = "Unable to check provided input for safeness" });
+                }
+
+                if (hasProfanity)
+                {
+                    SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["profanityText"] });
+                }
+                else
+                {
+                    string macro = CharacterDefinition.Macrofy(text, emoji);
+                    SendResponse(responseUrl, new SlackResponse() { response_type = "in_channel", text = macro, attachments = new SlackResponse.Attachment[] { new SlackResponse.Attachment() { text = "Requested by " + userName } } });
+                }
             }
+        }
+
+        private static bool IsAscii(string text)
+        {
+            return Encoding.UTF8.GetByteCount(text) == text.Length;
         }
 
         private static void SendResponse(string url, object content)
@@ -43,5 +57,6 @@ namespace SlackroCore
             HttpContent bodyContent = new StringContent(JsonConvert.SerializeObject(content));
             httpClient.PostAsync(url, bodyContent);
         }
+
     }
 }
