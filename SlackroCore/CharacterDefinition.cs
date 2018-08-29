@@ -234,10 +234,10 @@ namespace SlackroCore
                                             " *   ",
                                             "*    " });
 
-            Letters.Add('1', new string[] { " *",
-                                            "**",
-                                            " *",
-                                            " *",
+            Letters.Add('1', new string[] { " * ",
+                                            "** ",
+                                            " * ",
+                                            " * ",
                                             "***" });
 
             Letters.Add('2', new string[] { "****",
