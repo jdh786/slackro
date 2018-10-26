@@ -2,7 +2,22 @@
 
 namespace SlackroCore.SlackModels
 {
-    public class SlackRequest
+
+    public class Attachment
+    {
+        public string text { get; set; }
+        public IEnumerable<Action> actions { get; set; }
+        public class Action
+        {
+            public string name { get; set; }
+            public string text { get; set; }
+            public string type { get; set; }
+            public string style { get; set; }
+            public string value { get; set; }
+        }
+    }
+
+    public class Request
     {
         public string token { get; set; }
         public string team_id { get; set; }
@@ -19,25 +34,22 @@ namespace SlackroCore.SlackModels
         public string trigger_id { get; set; }
     }
 
-    public class SlackResponse
+    public class Response
     {
         public string text { get; set; }
         public string response_type { get; set; }
         public bool replace_original { get; set; }
         public bool delete_original { get; set; }
         public IEnumerable<Attachment> attachments { get; set; }
-        public class Attachment
-        {
-            public string text { get; set; }
-            public IEnumerable<Action> actions { get; set; }
-            public class Action
-            {
-                public string name { get; set; }
-                public string text { get; set; }
-                public string type { get; set; }
-                public string style { get; set; }
-                public string value { get; set; }
-            }
-        }
+       
+    }
+
+    public class ChatPostMessageResponse
+    {
+        public string token { get; set; }
+        public string channel { get; set; }
+        public string text { get; set; }
+        public bool as_user { get; set; }
+        public IEnumerable<Attachment> attachments { get; set; }
     }
 }

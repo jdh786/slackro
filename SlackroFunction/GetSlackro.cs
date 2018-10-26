@@ -19,13 +19,29 @@ namespace SlackroFunction
         public static async Task<HttpResponseMessage> Run([HttpTrigger(AuthorizationLevel.Function, "post", Route = null)]HttpRequestMessage req, TraceWriter log)
         {
             NameValueCollection reqContent = req.Content.ReadAsFormDataAsync().Result;
-            string commandText = reqContent["text"];
-            string responseUrl = reqContent["response_url"];
-            string userName = reqContent["user_name"];
-            string[] commandPieces = commandText.Split(new char[] { '\"', '\n' }).Where(p => !string.IsNullOrEmpty(p)).ToArray();
+            string token = reqContent["token"].Replace("\r\n","");
+            string channel = reqContent["channel_id"].Replace("\r\n", "");
+            string responseUrl = reqContent["response_url"].Replace("\r\n", "");
+            string userName = reqContent["user_name"].Replace("\r\n", "");
+            string commandText = reqContent["text"].Replace("\r\n","");
+            
+            string[] commandPieces = commandText.Split(new char[] { '\"', ':' })
+                .Where(c => !string.IsNullOrEmpty(c))
+                .ToArray();
+
+            string emoji = $":{commandPieces.LastOrDefault().Trim()}:";
             string text = commandPieces.FirstOrDefault().Trim().ToUpper();
-            string emoji = commandPieces.LastOrDefault().Trim();
-            Task slackro = Slackro.GetSlackro(text, emoji, userName, responseUrl);
+
+
+            Task slackro = Slackro.GetSlackro(text, emoji, new Request()
+            {
+                channel_id = channel,
+                response_url = responseUrl,
+                text= commandText,
+                token = token,
+                user_name = userName
+            });
+            
             return req.CreateResponse(HttpStatusCode.OK);
         }
     }

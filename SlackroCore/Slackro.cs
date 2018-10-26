@@ -11,15 +11,15 @@ namespace SlackroCore
 {
     public static class Slackro
     {
-        public static async Task GetSlackro(string text, string emoji, string userName, string responseUrl)
+        public static async Task GetSlackro(string text, string emoji, Request request)
         {
-            if (ConfigurationManager.AppSettings["forbiddenEmoji"].Split(',').Contains(emoji))
+            if (ConfigurationManager.AppSettings["forbiddenEmoji"]?.Split(',')?.Contains(emoji) ?? false)
             {
-                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["forbiddenEmojiResponse"]});
+                SendResponse(request.response_url, new Response() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["forbiddenEmojiResponse"]});
             }
             else if (!IsAscii(text))
             {
-                SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["nonAsciiResponse"] });
+                SendResponse(request.response_url, new Response() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["nonAsciiResponse"] });
             }
             else
             {
@@ -27,21 +27,39 @@ namespace SlackroCore
                 bool hasProfanity = false;
                 try
                 {
-                    hasProfanity = await profanityRepository.HasProfanity(text);
+                    hasProfanity = await profanityRepository.HasProfanity(text);                
+                    if (hasProfanity)
+                    {
+                        SendResponse(request.response_url, new Response() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["profanityText"] });
+                    }
+                    else
+                    {
+                        string macro = CharacterDefinition.Macrofy(text, emoji);
+                        Response response = new Response()
+                        {
+                            response_type = "in_channel",
+                            text = macro,
+                            attachments = new Attachment[]
+                                        { new Attachment()
+                                            { text = "Requested by " + request.user_name}
+                                        }
+                        };
+                        //SendResponse(request.response_url, response);
+
+                        ChatPostMessageResponse chatMessageResponse = new ChatPostMessageResponse()
+                        {
+                            as_user = true,
+                            channel = request.channel_id,
+                            text = macro,
+                            token = ConfigurationManager.AppSettings["slackOAuthToken"]
+                        };
+
+                        SendResponse(ConfigurationManager.AppSettings["slackChatPostMessageEndpoint"], chatMessageResponse);                                
+                    }
                 }
                 catch (Exception)
                 {
-                    SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = "Unable to check provided input for safeness" });
-                }
-
-                if (hasProfanity)
-                {
-                    SendResponse(responseUrl, new SlackResponse() { response_type = "ephemeral", text = ConfigurationManager.AppSettings["profanityText"] });
-                }
-                else
-                {
-                    string macro = CharacterDefinition.Macrofy(text, emoji);
-                    SendResponse(responseUrl, new SlackResponse() { response_type = "in_channel", text = macro, attachments = new SlackResponse.Attachment[] { new SlackResponse.Attachment() { text = "Requested by " + userName } } });
+                    SendResponse(request.response_url, new Response() { response_type = "ephemeral", text = "Unable to check provided input for safeness" });
                 }
             }
         }
@@ -55,7 +73,12 @@ namespace SlackroCore
         {
             HttpClient httpClient = new HttpClient();
             HttpContent bodyContent = new StringContent(JsonConvert.SerializeObject(content));
-            httpClient.PostAsync(url, bodyContent);
+            HttpResponseMessage response = httpClient.PostAsync(url, bodyContent).Result;
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var a = 0;
+            }
         }
 
     }
