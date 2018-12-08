@@ -13,29 +13,29 @@ namespace SlackroCore
         private static Dictionary <char,string[]> LoadCharacters()
         {
             Dictionary<char, string[]> Letters = new Dictionary<char, string[]>();
-            Letters.Add('A', new string[]{ " ** ",
-                                           "*  *",
-                                           "****",
-                                           "*  *",
-                                           "*  *"});
+            Letters.Add('A', new string[]{ " * ",
+                                           "* *",
+                                           "***",
+                                           "* *",
+                                           "* *"});
 
-            Letters.Add('B', new string[]{ "*** ",
-                                           "*  *",
-                                           "*** ",
-                                           "*  *",
-                                           "*** " });
+            Letters.Add('B', new string[]{ "** ",
+                                           "* *",
+                                           "** ",
+                                           "* *",
+                                           "** " });
 
-            Letters.Add('C', new string[] { " ***",
-                                            "*   ",
-                                            "*   ",
-                                            "*   ",
-                                            " ***" });
+            Letters.Add('C', new string[] { " **",
+                                            "*  ",
+                                            "*  ",
+                                            "*  ",
+                                            " **" });
 
-            Letters.Add('D', new string[] { "*** ",
-                                            "*  *",
-                                            "*  *",
-                                            "*  *",
-                                            "*** " });
+            Letters.Add('D', new string[] { "** ",
+                                            "* *",
+                                            "* *",
+                                            "* *",
+                                            "** " });
 
             Letters.Add('E', new string[] { "***",
                                             "*  ",
@@ -43,11 +43,11 @@ namespace SlackroCore
                                             "*  ",
                                             "***" });
 
-            Letters.Add('F', new string[] { "****",
-                                            "*   ",
-                                            "*** ",
-                                            "*   ",
-                                            "*   " });
+            Letters.Add('F', new string[] { "***",
+                                            "*  ",
+                                            "** ",
+                                            "*  ",
+                                            "*  " });
 
             Letters.Add('G', new string[] { " ***",
                                             "*   ",
@@ -55,11 +55,11 @@ namespace SlackroCore
                                             "*  *",
                                             " ***" });
 
-            Letters.Add('H', new string[] { "*  *",
-                                            "*  *",
-                                            "****",
-                                            "*  *",
-                                            "*  *" });
+            Letters.Add('H', new string[] { "* *",
+                                            "* *",
+                                            "***",
+                                            "* *",
+                                            "* *" });
 
             Letters.Add('I', new string[] { "***",
                                             " * ",
@@ -133,17 +133,17 @@ namespace SlackroCore
                                             " * ",
                                             " * " });
 
-            Letters.Add('U', new string[] { "*   *",
-                                            "*   *",
-                                            "*   *",
-                                            "*   *",
-                                            " *** " });
+            Letters.Add('U', new string[] { "*  *",
+                                            "*  *",
+                                            "*  *",
+                                            "*  *",
+                                            " ** " });
 
-            Letters.Add('V', new string[] { "*   *",
-                                            "*   *",
-                                            "*   *",
-                                            " * * ",
-                                            "  *  " });
+            Letters.Add('V', new string[] { "* *",
+                                            "* *",
+                                            "* *",
+                                            "* *",
+                                            " *  " });
 
             Letters.Add('W', new string[] { "*   *",
                                             "*   *",
@@ -205,11 +205,11 @@ namespace SlackroCore
                                             "   ",
                                             "   " });
 
-            Letters.Add(':', new string[] { "   ",
-                                            " * ",
-                                            "   ",
-                                            " * ",
-                                            "   " });
+            //Letters.Add(':', new string[] { "   ",
+            //                                " * ",
+            //                                "   ",
+            //                                " * ",
+            //                                "   " });
 
             Letters.Add(';', new string[] { "   ",
                                             " * ",
