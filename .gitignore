@@ -260,3 +260,4 @@ paket-files/
 __pycache__/
 *.pyc
 /SlackroFunction/Properties/PublishProfiles/SlackroFunctions - Web Deploy.pubxml
+/SlackroFunction/Properties/PublishProfiles/slackro-functions - Web Deploy.pubxml

@@ -22,9 +22,11 @@ namespace SlackroFunction
             string commandText = reqContent["text"];
             string responseUrl = reqContent["response_url"];
             string userName = reqContent["user_name"];
-            string[] commandPieces = commandText.Split(new char[] { '\"', '\n' }).Where(p => !string.IsNullOrEmpty(p)).ToArray();
+            string[] commandPieces = commandText.Split(new char[] { '\"', ':' })
+                 .Where(c => !string.IsNullOrEmpty(c))
+                 .ToArray();
+            string emoji = $":{commandPieces.LastOrDefault().Trim()}:";
             string text = commandPieces.FirstOrDefault().Trim().ToUpper();
-            string emoji = commandPieces.LastOrDefault().Trim();
             Task slackro = Slackro.GetSlackro(text, emoji, userName, responseUrl);
             return req.CreateResponse(HttpStatusCode.OK);
         }
